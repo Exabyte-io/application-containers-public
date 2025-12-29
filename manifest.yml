@@ -29,6 +29,6 @@ images:
 # LAMMPS
   # GNU
   - name: lammps
-    path: lammps/lammps-gnu-2025.07.22.2.def
+    path: lammps/lammps-2025.07.22.2-gnu.def
     registry: ghcr.io/exabyte-io/application-containers-public/lammps
     tag: 2025.07.22.2-gnu-0
