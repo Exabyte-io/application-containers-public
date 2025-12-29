@@ -20,6 +20,10 @@ images:
     path: espresso/espresso-6.3-gnu.def
     registry: ghcr.io/exabyte-io/application-containers-public/espresso
     tag: 6.3-gnu-0
+  - name: espresso
+    path: espresso/espresso-7.5-gnu.def
+    registry: ghcr.io/exabyte-io/application-containers-public/espresso
+    tag: 7.5-gnu-0
 # NWChem
   # GNU
   - name: nwchem
