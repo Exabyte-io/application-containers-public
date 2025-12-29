@@ -21,3 +21,9 @@ images:
     path: nwchem/nwchem-gnu-7.0.2.def
     registry: ghcr.io/exabyte-io/application-containers-public/nwchem
     tag: gnu-7.0.2-0
+# LAMMPS
+  # GNU
+  - name: lammps
+    path: lammps/lammps-gnu-2025.07.22.2.def
+    registry: ghcr.io/exabyte-io/application-containers-public/lammps
+    tag: gnu-2025.07.22.2-0
