@@ -1,0 +1,69 @@
+Bootstrap: oras
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9.7-0
+
+%labels
+    Maintainer Mat3ra.com
+    Version lammps-gnu-2025.07.22.2-0
+
+%help
+    LAMMPS 2025.07.22.2 (GNU Build)
+    Example command:
+    mpirun -np 1 apptainer exec <image>.sif lmp -i in.min
+
+%environment
+    export PATH=/usr/lib64/openmpi/bin:/opt/lammps-gnu-2025.07.22.2/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH
+
+%post
+    # source env variables from base image
+    if [ -f /.singularity.d/env/91-environment.sh ]; then
+        . /.singularity.d/env/91-environment.sh
+    fi
+
+    # enable additional repos
+    dnf in -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
+    dnf in -y --nogpgcheck https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-$(rpm -E %rhel).noarch.rpm
+
+    # install dependencies
+    dnf in -y ffmpeg \
+        ffmpeg-devel \
+        libpng \
+        libpng-devel \
+        libjpeg-turbo \
+        libjpeg-turbo-devel
+
+    # build lammps
+    wget -q https://download.lammps.org/tars/lammps-22Jul2025_update2.tar.gz
+    tar -xf lammps-22Jul2025_update2.tar.gz
+    rm -f lammps-22Jul2025_update2.tar.gz
+    cd lammps-22Jul2025
+
+    export CC=mpicc
+    export CXX=mpicxx
+    export FC=mpifort
+
+    cmake -B _build \
+        -C cmake/presets/most.cmake \
+        -C cmake/presets/nolib.cmake \
+        -D CMAKE_BUILD_TYPE=Release \
+        -D BUILD_MPI=yes \
+        -D CMAKE_CXX_STANDARD=17 \
+        -D FFT=FFTW3 \
+        -D FFTW3_INCLUDE_DIR=/usr/include \
+        -D FFTW3_LIBRARY=/usr/lib64/libfftw3.so \
+        -D KSPACE=yes \
+        -D MC=yes \
+        -D MOLECULE=yes \
+        -D QEQ=yes \
+        -D WITH_JPEG=yes \
+        -D WITH_PNG=yes \
+        -D WITH_FFMPEG=yes \
+        -D CMAKE_INSTALL_PREFIX=/opt/lammps-gnu-2025.07.22.2 ./cmake
+
+    cmake --build _build -j$(nproc)
+    cmake --install _build
+
+    # cleanup
+    cd ..
+    rm -rf lammps-22Jul2025
+    dnf clean all && rm -rf /var/cache/yum && rm -rf /var/cache/dnf
