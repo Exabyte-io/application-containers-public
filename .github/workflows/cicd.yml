@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest-m
+    runs-on: ubuntu-latest
     permissions:
       packages: write
       contents: read
@@ -99,6 +99,6 @@ jobs:
               echo "Skipping push for pull request."
               continue
             fi
-            
+
             oras push "$oras_uri" --artifact-type "application/vnd.sylabs.sif.layer.v1.sif" "${sif_file}:application/vnd.sylabs.sif.layer.v1.sif"
           done
