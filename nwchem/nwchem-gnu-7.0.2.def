@@ -1,0 +1,97 @@
+Bootstrap: oras
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9.7-0
+
+%labels
+    Maintainer Mat3ra.com
+    Version nwchem-gnu-7.0.2
+
+%environment
+    export PATH=/usr/lib64/openmpi/bin:/opt/nwchem-7.0.2/bin:$PATH
+
+%post
+    set -e
+    dnf in -y python3-devel
+
+    cd /opt
+    mkdir source
+    wget https://github.com/nwchemgit/nwchem/archive/refs/tags/v7.0.2-release.tar.gz
+    tar -zxf v7.0.2-release.tar.gz --strip 1 -C ./source
+    cd source
+    export INSTALL_PATH=/opt/nwchem-7.0.2
+
+    export PATH=/usr/lib64/openmpi/bin:$PATH
+    export MPIF90=mpif90
+    export CC=mpicc
+    export F90=gfortran
+    export F77=gfortran
+    export BLAS_LIBS="-lopenblas"
+    export LAPACK_LIBS="-lopenblas"
+    export LDFLAGS="-Wl,-rpath,/usr/lib64/openmpi/lib"
+    export FFLAGS="-O2 -fallow-argument-mismatch"
+
+    export NWCHEM_TOP="/opt/source"
+    export NWCHEM_TARGET=LINUX64
+
+    export USE_MPI=y
+    export MPI=y
+    export MPIF=y
+    export MPIF4=y
+    export MPI_PATH="/usr/lib64/openmpi"
+    export USE_PYTHON64="y"
+    export PYTHONLIBTYPE="so"
+    export USE_NOFSCHECK=TRUE
+    export USE_NOIO=TRUE
+    export LARGE_FILES=TRUE
+    export USE_PYTHONCONFIG=y
+    export PYTHONHOME=/usr
+    export PYTHONVERSION=$(python3 -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
+
+    # Comment out USE_INTERNALBLAS for OpenBLAS
+    export USE_INTERNALBLAS=y
+
+    cd $NWCHEM_TOP/src
+    make nwchem_config NWCHEM_MODULES="all python"
+    make -j$(nproc)
+
+    mkdir -p "${INSTALL_PATH}/bin"
+    mkdir -p "${INSTALL_PATH}/data"
+    mkdir -p "${INSTALL_PATH}/lib"
+
+    # Copy binary if built
+    if [ -d "/opt/source/bin/LINUX64" ]; then
+        cp /opt/source/bin/LINUX64/* "${INSTALL_PATH}/bin/"
+        chmod 755 "${INSTALL_PATH}/bin/"*
+    fi
+
+    # Data files
+    if [ -d "/opt/source/src/basis/libraries" ]; then
+        cp -r /opt/source/src/basis/libraries "${INSTALL_PATH}/data"
+    fi
+    if [ -d "/opt/source/src/data" ]; then
+        cp -r /opt/source/src/data "${INSTALL_PATH}/data"
+    fi
+    if [ -d "/opt/source/src/nwpw/libraryps" ]; then
+        cp -r /opt/source/src/nwpw/libraryps "${INSTALL_PATH}/data"
+    fi
+
+    # Libraries
+    if [ -d "/opt/source/lib/LINUX64" ]; then
+        cp -r /opt/source/lib/LINUX64 "${INSTALL_PATH}/lib"
+    fi
+
+    cat > "${INSTALL_PATH}/data/default.nwchemrc" << EOF
+nwchem_basis_library ${INSTALL_PATH}/data/libraries/
+nwchem_nwpw_library ${INSTALL_PATH}/data/libraryps/
+ffield amber
+amber_1 ${INSTALL_PATH}/data/amber_s/
+amber_2 ${INSTALL_PATH}/data/amber_q/
+amber_3 ${INSTALL_PATH}/data/amber_x/
+amber_4 ${INSTALL_PATH}/data/amber_u/
+spce    ${INSTALL_PATH}/data/solvents/spce.rst
+charmm_s ${INSTALL_PATH}/data/charmm_s/
+charmm_x ${INSTALL_PATH}/data/charmm_x/
+EOF
+
+    # Clean up
+    cd /opt && rm -f v7.0.2-release.tar.gz && rm -rf source
+    dnf clean all && rm -rf /var/lib/dnf /var/cache/dnf /var/cache/yum
