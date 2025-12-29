@@ -3,7 +3,7 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9
 
 %labels
     Maintainer Mat3ra.com
-    Version espresso-gnu-6.3-0
+    Version espresso-6.3-gnu-0
 
 %environment
     export PATH=/opt/qe-6.3/bin:$PATH

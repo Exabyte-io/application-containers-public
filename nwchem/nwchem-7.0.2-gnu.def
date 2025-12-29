@@ -3,7 +3,7 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9
 
 %labels
     Maintainer Mat3ra.com
-    Version nwchem-gnu-7.0.2-0
+    Version nwchem-7.0.2-gnu-0
 
 %environment
     export PATH=/usr/lib64/openmpi/bin:/opt/nwchem-7.0.2/bin:$PATH

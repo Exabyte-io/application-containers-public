@@ -12,18 +12,18 @@ images:
 # Quantum ESPRESSO
   # GNU
   - name: espresso
-    path: espresso/espresso-gnu-6.3.def
+    path: espresso/espresso-6.3-gnu.def
     registry: ghcr.io/exabyte-io/application-containers-public/espresso
-    tag: gnu-6.3-0
+    tag: 6.3-gnu-0
 # NWChem
   # GNU
   - name: nwchem
-    path: nwchem/nwchem-gnu-7.0.2.def
+    path: nwchem/nwchem-7.0.2-gnu.def
     registry: ghcr.io/exabyte-io/application-containers-public/nwchem
-    tag: gnu-7.0.2-0
+    tag: 7.0.2-gnu-0
 # LAMMPS
   # GNU
   - name: lammps
     path: lammps/lammps-gnu-2025.07.22.2.def
     registry: ghcr.io/exabyte-io/application-containers-public/lammps
-    tag: gnu-2025.07.22.2-0
+    tag: 2025.07.22.2-gnu-0

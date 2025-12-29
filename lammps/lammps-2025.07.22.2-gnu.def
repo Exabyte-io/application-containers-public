@@ -3,7 +3,7 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9
 
 %labels
     Maintainer Mat3ra.com
-    Version lammps-gnu-2025.07.22.2-0
+    Version lammps-2025.07.22.2-gnu-0
 
 %help
     LAMMPS 2025.07.22.2 (GNU Build)
