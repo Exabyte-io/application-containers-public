@@ -9,6 +9,11 @@ images:
     path: base/almalinux-gnu.def
     registry: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu
     tag: 9.7-0
+  # Intel
+  - name: almalinux-apptainer-intel
+    path: base/almalinux-intel-2023.1.def
+    registry: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-intel
+    tag: 2023.1-0
 # Quantum ESPRESSO
   # GNU
   - name: espresso
@@ -24,6 +29,6 @@ images:
 # LAMMPS
   # GNU
   - name: lammps
-    path: lammps/lammps-gnu-2025.07.22.2.def
+    path: lammps/lammps-2025.07.22.2-gnu.def
     registry: ghcr.io/exabyte-io/application-containers-public/lammps
     tag: 2025.07.22.2-gnu-0

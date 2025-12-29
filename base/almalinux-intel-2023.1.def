@@ -1,0 +1,61 @@
+Bootstrap: oras
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:9.7-0
+
+%labels
+    Maintainer Mat3ra.com
+    Version almalinux-apptainer-intel-2023.1-0
+
+%help
+    Intel OneAPI v2023.1.0 individual components (C/C++, FORTRAN compilers, MPI,
+    TBB, and MKL) installed in AlmaLinux 9.7.
+
+%post
+    # install additional OneAPI dependencies
+    dnf in -y gawk \
+        ncurses \
+        ncurses-term \
+        procps
+
+    # install intel oneapi 2023.1 components
+    export ONEAPI_ROOT="/opt/intel-2023.1"
+    pkgs=(
+        "https://registrationcenter-download.intel.com/akdlm/IRC_NAS/af3ad519-4c87-4534-87cb-5c7bda12754e/l_tbb_oneapi_p_2021.11.0.49527_offline.sh"
+        "https://registrationcenter-download.intel.com/akdlm/IRC_NAS/89283df8-c667-47b0-b7e1-c4573e37bd3e/l_dpcpp-cpp-compiler_p_2023.1.0.46347_offline.sh"
+        "https://registrationcenter-download.intel.com/akdlm/IRC_NAS/150e0430-63df-48a0-8469-ecebff0a1858/l_fortran-compiler_p_2023.1.0.46348_offline.sh"
+        "https://registrationcenter-download.intel.com/akdlm/IRC_NAS/718d6f8f-2546-4b36-b97b-bc58d5482ebf/l_mpi_oneapi_p_2021.9.0.43482_offline.sh"
+        "https://registrationcenter-download.intel.com/akdlm/IRC_NAS/cd17b7fe-500e-4305-a89b-bd5b42bfd9f8/l_onemkl_p_2023.1.0.46342_offline.sh"
+    )
+
+    for pkg in "${pkgs[@]}"; do
+        wget -q $pkg
+        sh ./$( basename $pkg ) -a --silent --eula accept --install-dir $ONEAPI_ROOT
+        rm -f $( basename $pkg )
+    done
+
+    # Clean up
+    dnf clean all && rm -rf /var/cache/yum && rm -rf /var/cache/dnf
+
+    cat >> $APPTAINER_ENVIRONMENT <<'EOF'
+export ONEAPI_ROOT=/opt/intel-2023.1
+export TBBROOT=$ONEAPI_ROOT/tbb/2021.11
+export PKG_CONFIG_PATH=$ONEAPI_ROOT/tbb/2021.11/lib/pkgconfig:$ONEAPI_ROOT/mpi/2021.9.0/lib/pkgconfig:$ONEAPI_ROOT/mkl/2023.1.0/lib/pkgconfig:$ONEAPI_ROOT/compiler/2023.1.0/lib/pkgconfig
+export FPGA_VARS_DIR=$ONEAPI_ROOT/compiler/2023.1.0/linux/lib/oclfpga
+export I_MPI_ROOT=$ONEAPI_ROOT/mpi/2021.9.0
+export FI_PROVIDER_PATH=$ONEAPI_ROOT/mpi/2021.9.0/libfabric/lib/prov:/usr/lib64/libfabric
+export DIAGUTIL_PATH=$ONEAPI_ROOT/debugger/2023.1.0/sys_check/debugger_sys_check.py:$ONEAPI_ROOT/compiler/2023.1.0/sys_check/sys_check.sh
+export MANPATH=$ONEAPI_ROOT/mpi/2021.9.0/man:$ONEAPI_ROOT/debugger/2023.1.0/documentation/man:$ONEAPI_ROOT/compiler/2023.1.0/documentation/en/man/common
+export GDB_INFO=$ONEAPI_ROOT/debugger/2023.1.0/documentation/info/
+export CMAKE_PREFIX_PATH=$ONEAPI_ROOT/tbb/2021.11:$ONEAPI_ROOT/compiler/2023.1.0/linux/IntelDPCPP
+export CMPLR_ROOT=$ONEAPI_ROOT/compiler/2023.1.0
+export INFOPATH=$ONEAPI_ROOT/debugger/2023.1.0/gdb/intel64/lib
+export LIBRARY_PATH=$ONEAPI_ROOT/tbb/2021.11/lib/intel64/gcc4.8:$ONEAPI_ROOT/mpi/2021.9.0/libfabric/lib:$ONEAPI_ROOT/mpi/2021.9.0/lib/release:$ONEAPI_ROOT/mpi/2021.9.0/lib:$ONEAPI_ROOT/mkl/2023.1.0/lib/intel64:$ONEAPI_ROOT/compiler/2023.1.0/linux/compiler/lib/intel64_lin:$ONEAPI_ROOT/compiler/2023.1.0/linux/lib
+export OCL_ICD_FILENAMES=libintelocl_emu.so:libalteracl.so:$ONEAPI_ROOT/compiler/2023.1.0/linux/lib/x64/libintelocl.so
+export CLASSPATH=$ONEAPI_ROOT/mpi/2021.9.0/lib/mpi.jar
+export INTELFPGAOCLSDKROOT=$ONEAPI_ROOT/compiler/2023.1.0/linux/lib/oclfpga
+export LD_LIBRARY_PATH=$ONEAPI_ROOT/tbb/2021.11/lib/intel64/gcc4.8:$ONEAPI_ROOT/mpi/2021.9.0/libfabric/lib:$ONEAPI_ROOT/mpi/2021.9.0/lib/release:$ONEAPI_ROOT/mpi/2021.9.0/lib:$ONEAPI_ROOT/mkl/2023.1.0/lib/intel64:$ONEAPI_ROOT/debugger/2023.1.0/gdb/intel64/lib:$ONEAPI_ROOT/debugger/2023.1.0/libipt/intel64/lib:$ONEAPI_ROOT/debugger/2023.1.0/dep/lib:$ONEAPI_ROOT/compiler/2023.1.0/linux/lib:$ONEAPI_ROOT/compiler/2023.1.0/linux/lib/x64:$ONEAPI_ROOT/compiler/2023.1.0/linux/lib/oclfpga/host/linux64/lib:$ONEAPI_ROOT/compiler/2023.1.0/linux/compiler/lib/intel64_lin:$LD_LIBRARY_PATH
+export MKLROOT=$ONEAPI_ROOT/mkl/2023.1.0
+export NLSPATH=$ONEAPI_ROOT/mkl/2023.1.0/lib/intel64/locale/%l_%t/%N:$ONEAPI_ROOT/compiler/2023.1.0/linux/compiler/lib/intel64_lin/locale/%l_%t/%N
+export PATH=$ONEAPI_ROOT/mpi/2021.9.0/libfabric/bin:$ONEAPI_ROOT/mpi/2021.9.0/bin:$ONEAPI_ROOT/mkl/2023.1.0/bin/intel64:$ONEAPI_ROOT/dev-utilities/2021.9.0/bin:$ONEAPI_ROOT/debugger/2023.1.0/gdb/intel64/bin:$ONEAPI_ROOT/compiler/2023.1.0/linux/lib/oclfpga/bin:$ONEAPI_ROOT/compiler/2023.1.0/linux/bin/intel64:$ONEAPI_ROOT/compiler/2023.1.0/linux/bin:$PATH
+export INTEL_PYTHONHOME=$ONEAPI_ROOT/debugger/2023.1.0/dep
+export CPATH=$ONEAPI_ROOT/tbb/2021.11/include:$ONEAPI_ROOT/mpi/2021.9.0/include:$ONEAPI_ROOT/mkl/2023.1.0/include:$ONEAPI_ROOT/dev-utilities/2021.9.0/include
+EOF
