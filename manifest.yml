@@ -1,4 +1,6 @@
 images:
+# Base
+  # GNU
   - name: almalinux-apptainer-base
     path: base/almalinux-base.def
     registry: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base
@@ -7,3 +9,8 @@ images:
     path: base/almalinux-gnu.def
     registry: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu
     tag: 9.7-0
+# Quantum ESPRESSO
+  - name: espresso-gnu
+    path: espresso/espresso-6.3-gnu.def
+    registry: ghcr.io/exabyte-io/application-containers-public/espresso-gnu
+    tag: 6.3-0

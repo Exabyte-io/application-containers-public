@@ -1,0 +1,51 @@
+Bootstrap: oras
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9.7-0
+
+%labels
+    Maintainer Mat3ra.com
+    Version espresso-gnu-6.3-0
+
+%environment
+    export PATH=/opt/qe-6.3/bin:$PATH
+
+%post
+    if [ -f /.singularity.d/env/91-environment.sh ]; then
+        . /.singularity.d/env/91-environment.sh
+    fi
+
+    VERSION=6.3
+    INSTALL_PREFIX="/opt/qe-$VERSION"
+    BUILD_DIR=~/tmp
+    mkdir $BUILD_DIR
+
+    cd $BUILD_DIR
+    wget https://gitlab.com/QEF/q-e/-/archive/qe-${VERSION}/q-e-qe-${VERSION}.tar.gz
+    tar -xf q-e-qe-${VERSION}.tar.gz
+    cd q-e-qe-${VERSION}
+
+    EXTRA_GFORTRAN_FLAGS="-O2 -fallow-argument-mismatch -fno-lto"
+    WNFLAGS="-Wno-unused-variable -Wno-conversion -Wno-unused-dummy-argument -Wno-character-truncation -Wno-missing-include-dirs -Wno-unused-function -Wno-maybe-unitialized"
+
+    export CC=mpicc
+    export CXX=c++
+    export F77=gfortran
+    export F90=mpif90
+    export MPIF90=mpif90
+    export FCFLAGS="$EXTRA_GFORTRAN_FLAGS"
+    export CFLAGS="$WNFLAGS $EXTRA_GFORTRAN_FLAGS"
+    export FFLAGS="$EXTRA_GFORTRAN_FLAGS"
+    export FOXFLAGS="$EXTRA_GFORTRAN_FLAGS -fPIE -x f95-cpp-input"
+    export FFT_LIBS="-lfftw3"
+    export SCALAPACK_LIBS="-lscalapack"
+    export BLAS_LIBS="-lopenblas"
+    export LAPACK_LIBS="-lopenblas"
+
+    ./configure --enable-parallel --with-scalapack=yes --prefix=${INSTALL_PREFIX}
+    sed -i.bak '/^\s*DFLAGS\s*=/s/$/\ -D__FFTW/' make.inc
+
+    # parallel build has problem
+    make all
+    # force make install
+    make -B install
+
+    rm -rf $BUILD_DIR
