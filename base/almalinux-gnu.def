@@ -1,0 +1,25 @@
+Bootstrap: oras
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:9.7-0
+
+%labels
+    Maintainer Mat3ra.com
+    Version almalinux-apptainer-gnu-9.7-0
+
+%post
+    dnf install -y \
+    fftw \
+    fftw-devel \
+    openblas \
+    openblas-devel \
+    openmpi \
+    openmpi-devel \
+    scalapack-openmpi-devel
+
+
+    # Clean up
+    dnf clean all && rm -rf /var/lib/dnf /var/cache/dnf /var/cache/yum
+
+    cat >> $APPTAINER_ENVIRONMENT <<'EOF'
+export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH
+export PATH=/usr/lib64/openmpi/bin:$PATH
+EOF
