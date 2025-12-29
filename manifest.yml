@@ -1,1 +1,5 @@
 images:
+  - name: almalinux-apptainer-base
+    path: base/almalinux-base.def
+    registry: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base
+    tag: 9.7-0
