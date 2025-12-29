@@ -10,7 +10,14 @@ images:
     registry: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu
     tag: 9.7-0
 # Quantum ESPRESSO
-  - name: espresso-gnu
-    path: espresso/espresso-6.3-gnu.def
-    registry: ghcr.io/exabyte-io/application-containers-public/espresso-gnu
-    tag: 6.3-0
+  # GNU
+  - name: espresso
+    path: espresso/espresso-gnu-6.3.def
+    registry: ghcr.io/exabyte-io/application-containers-public/espresso
+    tag: gnu-6.3-0
+# NWChem
+  # GNU
+  - name: nwchem
+    path: nwchem/nwchem-gnu-7.0.2.def
+    registry: ghcr.io/exabyte-io/application-containers-public/nwchem
+    tag: gnu-7.0.2-0
