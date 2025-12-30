@@ -73,7 +73,7 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:
 
 %labels
     Maintainer Mat3ra.com
-    Version espresso-7.5-intel-2023.1-libxc-7.0-0
+    Version espresso-7.5-host-intel-2023.1-libxc-7.0-0
 
 %help
     Quantum ESPRESSO v7.5 compiled with Intel OneAPI 2023.1 and LibXC 7.0.0.

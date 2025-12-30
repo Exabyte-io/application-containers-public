@@ -26,9 +26,9 @@ images:
     tag: 7.5-gnu-0
   # Intel
   - name: espresso
-    path: espresso/espresso-7.5-intel-2023.1-libxc-7.0.def
+    path: espresso/espresso-7.5-host-intel-2023.1-libxc-7.0.def
     registry: ghcr.io/exabyte-io/application-containers-public/espresso
-    tag: 7.5-intel-2023.1-libxc-7.0-0
+    tag: 7.5-host-intel-2023.1-libxc-7.0-0
 # NWChem
   # GNU
   - name: nwchem
