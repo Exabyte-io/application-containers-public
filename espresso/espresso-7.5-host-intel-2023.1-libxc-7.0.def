@@ -23,7 +23,7 @@ Stage: devel
     tar -xf libxc-${LIBXC_VERSION}.tar.gz
     cd libxc-${LIBXC_VERSION}
     autoreconf -i
-    ./configure --prefix=${LIBXC_INSTALL_PATH} CC=icx FC=ifx
+    ./configure --prefix=${LIBXC_INSTALL_PATH} CC=icc FC=ifort
     make install
 
     export LIBXC_LIBS="-L${LIBXC_INSTALL_PATH}/lib -lxcf90 -lxc"
@@ -37,12 +37,12 @@ Stage: devel
 
     ./configure \
         prefix=${QE_INSTALL_PATH} \
-        FC=ifx \
-        F90=mpiifx \
-        MPIF90=mpiifx \
-        CC=mpiicx \
-        CXX=icpx \
-        F77=ifx \
+        FC=ifort \
+        F90=mpiifort \
+        MPIF90=mpiifort \
+        CC=mpiicc \
+        CXX=icpc \
+        F77=ifort \
         LIBXC_LIBS="${LIBXC_LIBS}" \
         LIBXC_INCLUDE="${LIBXC_INCLUDE}" \
         FFLAGS="-O3 -assume byterecl -g -traceback" \
@@ -61,7 +61,7 @@ Stage: devel
     cd EPW
     make -j$(nproc) all
     cd ../GWW/util
-    export FC=ifx
+    export FC=ifort
     make all
 
     # Install Quantum ESPRESSO
