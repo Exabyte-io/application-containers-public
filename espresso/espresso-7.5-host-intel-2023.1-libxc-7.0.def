@@ -1,0 +1,90 @@
+Bootstrap: oras
+From: ghcr.io/exabyte-io/application-containers/almalinux-9.5-intel-oneapi-2023.1:v0.5.0
+Stage: devel
+
+%post
+    if [ -f /.singularity.d/env/91-environment.sh ]; then
+        . /.singularity.d/env/91-environment.sh
+    fi
+
+    export QE_VERSION="7.5"
+    export LIBXC_VERSION="7.0.0"
+    export QE_INSTALL_PATH=/opt/qe-${QE_VERSION}
+    export LIBXC_INSTALL_PATH=/opt/libxc-${LIBXC_VERSION}
+
+    BUILD_DIR=~/tmp
+    mkdir $BUILD_DIR
+
+    # Build LibXC
+    cd $BUILD_DIR
+    wget https://gitlab.com/libxc/libxc/-/archive/${LIBXC_VERSION}/libxc-${LIBXC_VERSION}.tar.gz
+    tar -xf libxc-${LIBXC_VERSION}.tar.gz
+    cd libxc-${LIBXC_VERSION}
+    autoreconf -i
+    ./configure --prefix=${LIBXC_INSTALL_PATH} CC=icx FC=ifx
+    make install
+
+    export LIBXC_LIBS="-L${LIBXC_INSTALL_PATH}/lib -lxcf90 -lxc"
+    export LIBXC_INCLUDE="-I${LIBXC_INSTALL_PATH}/include"
+
+    # Build Quantum ESPRESSO
+    cd $BUILD_DIR
+    wget https://github.com/QEF/q-e/archive/refs/tags/qe-${QE_VERSION}.tar.gz
+    tar -xf qe-${QE_VERSION}.tar.gz
+    cd q-e-qe-${QE_VERSION}
+
+    ./configure \
+        prefix=${QE_INSTALL_PATH} \
+        FC=ifx \
+        F90=mpiifx \
+        MPIF90=mpiifx \
+        CC=mpiicx \
+        CXX=icpx \
+        F77=ifx \
+        LIBXC_LIBS="${LIBXC_LIBS}" \
+        LIBXC_INCLUDE="${LIBXC_INCLUDE}" \
+        FFLAGS="-O3 -assume byterecl -g -traceback" \
+        LAPACK_LIBS="-L${MKLROOT}/lib/libmkl_blas95_lp64.a ${MKLROOT}/lib/libmkl_lapack95_lp64.a -L${MKLROOT}/lib -lmkl_scalapack_lp64 -lmkl_cdft_core -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl" \
+        BLAS_LIBS="-L${MKLROOT}/lib/libmkl_blas95_lp64.a ${MKLROOT}/lib/libmkl_lapack95_lp64.a -L${MKLROOT}/lib -lmkl_scalapack_lp64 -lmkl_cdft_core -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl" \
+        SCALAPACK_LIBS="-L${MKLROOT}/lib/libmkl_blas95_lp64.a ${MKLROOT}/lib/libmkl_lapack95_lp64.a -L${MKLROOT}/lib -lmkl_scalapack_lp64 -lmkl_cdft_core -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl" \
+        FFT_LIBS="-L${MKLROOT}/lib/libmkl_blas95_lp64.a ${MKLROOT}/lib/libmkl_lapack95_lp64.a -L${MKLROOT}/lib -lmkl_scalapack_lp64 -lmkl_cdft_core -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl"
+
+    # Apply patches for Intel OneAPI compatibility
+    sed -i.bak '/^\s*DFLAGS\s*=/s/$/\ -D__FFTW/' make.inc
+
+    # Build Quantum ESPRESSO
+    make all -j$(nproc)
+
+    # Build and install additional components
+    cd EPW
+    make -j$(nproc) all
+    cd ../GWW/util
+    export FC=ifx
+    make all
+
+    # Install Quantum ESPRESSO
+    cd ../..
+    make install
+
+#-------------------------------- Final image ---------------------------------#
+
+Bootstrap: oras
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:9.7-0
+
+%labels
+    Maintainer Mat3ra.com
+    Version espresso-7.5-intel-2023.1-libxc-7.0-0
+
+%help
+    Quantum ESPRESSO v7.5 compiled with Intel OneAPI 2023.1 and LibXC 7.0.0.
+    This container does not bundle Intel OneAPI itself and needs to be mapped
+    from the host.
+    Example command:
+        mpirun -np 2 apptainer run /<image.sif> pw.x -in pw.in | tee pw.out
+
+%files from devel
+    /opt/qe-7.5         /opt/
+    /opt/libxc-7.0.0    /opt/
+
+%environment
+    export PATH=/opt/qe-7.5/bin:$PATH
