@@ -35,21 +35,18 @@ Stage: devel
     tar -xf qe-${QE_VERSION}.tar.gz
     cd q-e-qe-${QE_VERSION}
 
-    ./configure \
-        prefix=${QE_INSTALL_PATH} \
-        FC=ifort \
+    ./configure prefix=${QE_INSTALL_PATH} --with-libxc --with-libxc-prefix=$LIBXCROOT \
+        CC=mpicc \
+        FC=mpiifort \
+        F77=mpiifort \
         F90=mpiifort \
         MPIF90=mpiifort \
-        CC=mpiicc \
-        CXX=icpc \
-        F77=ifort \
-        LIBXC_LIBS="${LIBXC_LIBS}" \
-        LIBXC_INCLUDE="${LIBXC_INCLUDE}" \
+        CXX=icc \
         FFLAGS="-O3 -assume byterecl -g -traceback" \
-        LAPACK_LIBS="-L${MKLROOT}/lib/libmkl_blas95_lp64.a ${MKLROOT}/lib/libmkl_lapack95_lp64.a -L${MKLROOT}/lib -lmkl_scalapack_lp64 -lmkl_cdft_core -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl" \
-        BLAS_LIBS="-L${MKLROOT}/lib/libmkl_blas95_lp64.a ${MKLROOT}/lib/libmkl_lapack95_lp64.a -L${MKLROOT}/lib -lmkl_scalapack_lp64 -lmkl_cdft_core -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl" \
-        SCALAPACK_LIBS="-L${MKLROOT}/lib/libmkl_blas95_lp64.a ${MKLROOT}/lib/libmkl_lapack95_lp64.a -L${MKLROOT}/lib -lmkl_scalapack_lp64 -lmkl_cdft_core -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl" \
-        FFT_LIBS="-L${MKLROOT}/lib/libmkl_blas95_lp64.a ${MKLROOT}/lib/libmkl_lapack95_lp64.a -L${MKLROOT}/lib -lmkl_scalapack_lp64 -lmkl_cdft_core -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -lmkl_blacs_intelmpi_lp64 -liomp5 -lpthread -lm -ldl"
+        LAPACK_LIBS="-L${MKLROOT}/lib/intel64 -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm -ldl" \
+        BLAS_LIBS="-L${MKLROOT}/lib/intel64 -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm -ldl" \
+        SCALAPACK_LIBS="-L${MKLROOT}/lib/intel64 -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm -ldl" \
+        FFT_LIBS="-L${MKLROOT}/lib/intel64 -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm -ldl"
 
     # Apply patches for Intel OneAPI compatibility
     sed -i.bak '/^\s*DFLAGS\s*=/s/$/\ -D__FFTW/' make.inc
@@ -60,8 +57,9 @@ Stage: devel
     # Build and install additional components
     cd EPW
     make -j$(nproc) all
+
     cd ../GWW/util
-    export FC=ifort
+    export FC=mpiifort
     make all
 
     # Install Quantum ESPRESSO
