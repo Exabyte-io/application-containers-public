@@ -7,6 +7,8 @@ Stage: devel
         . /.singularity.d/env/91-environment.sh
     fi
 
+    dnf install -y libtool
+
     export QE_VERSION="7.5"
     export LIBXC_VERSION="7.0.0"
     export QE_INSTALL_PATH=/opt/qe-${QE_VERSION}
