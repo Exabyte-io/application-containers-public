@@ -1,0 +1,52 @@
+Bootstrap: oras
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-nvhpc:25.3-cuda-12.8-0
+Stage: devel
+
+%post
+    if [ -f /.singularity.d/env/91-environment.sh ]; then
+        . /.singularity.d/env/91-environment.sh
+    fi
+
+    QE_VER="7.5"
+    wget -q https://gitlab.com/QEF/q-e/-/archive/qe-${QE_VER}/q-e-qe-${QE_VER}.tar.gz
+    tar -xf q-e-qe-${QE_VER}.tar.gz
+    rm -f q-e-qe-${QE_VER}.tar.gz
+    cd q-e-qe-${QE_VER}
+
+    export CC=nvc
+    export CXX=nvc++
+    export F90=nvfortran
+    export NVHPC_INSTALL_DIR="/opt/nvidia/hpc_sdk"
+
+    ./configure prefix=/opt/qe-${QE_VER} \
+        --libdir="${NVHPC_INSTALL_DIR}/Linux_x86_64/25.3/math_libs/12.8" \
+        --with-cuda="${NVHPC_INSTALL_DIR}/Linux_x86_64/25.3/cuda/12.8" \
+        --with-cuda-runtime=12.8 \
+        --with-cuda-cc=8.0 \
+        --enable-openmp
+
+    make all -j$(nproc)
+    make install
+
+    cd ..
+    rm -rf q-e-qe-${QE_VER}
+
+#-------------------------------- Final image ---------------------------------#
+
+Bootstrap: oras
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:9.7-1
+
+%labels
+    Maintainer Mat3ra.com
+    Version espresso-7.5-host-cuda-12.8
+
+%help
+    Quantum ESPRESSO v7.5 (maps NVHPC v25.3 + CUDA 12.8 from the host installation)
+    Example command:
+    mpirun -np 1 apptainer exec --nv <image>.sif pw.x -in pw.in | tee pw.out
+
+%files from devel
+    /opt/qe-7.5    /opt/
+
+%environment
+    export PATH=/opt/qe-7.5/bin:$PATH
