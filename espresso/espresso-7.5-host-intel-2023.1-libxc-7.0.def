@@ -17,7 +17,7 @@ Stage: devel
 
     # Build LibXC
     cd $BUILD_DIR
-    wget https://gitlab.com/libxc/libxc/-/archive/${LIBXC_VERSION}/libxc-${LIBXC_VERSION}.tar.gz
+    wget -q https://gitlab.com/libxc/libxc/-/archive/${LIBXC_VERSION}/libxc-${LIBXC_VERSION}.tar.gz
     tar -xf libxc-${LIBXC_VERSION}.tar.gz
     cd libxc-${LIBXC_VERSION}
     autoreconf -i
@@ -26,7 +26,7 @@ Stage: devel
 
     # Build Quantum ESPRESSO
     cd $BUILD_DIR
-    wget https://github.com/QEF/q-e/archive/refs/tags/qe-${QE_VERSION}.tar.gz
+    wget -q https://github.com/QEF/q-e/archive/refs/tags/qe-${QE_VERSION}.tar.gz
     tar -xf qe-${QE_VERSION}.tar.gz
     cd q-e-qe-${QE_VERSION}
 

@@ -21,14 +21,14 @@ From: almalinux:9
 %post
     dnf in -y wget
 
-    wget https://www.apps.advancesoft.jp/nanolabo/install_nanolabo_tool_linux_v3.1.bin
+    wget -q https://www.apps.advancesoft.jp/nanolabo/install_nanolabo_tool_linux_v3.1.bin
     #  oras pull ghcr.io/exabyte-io/application-containers-public/install_nanolabo_tool_linux:3.1
     chmod +x install_nanolabo_tool_linux_v3.1.bin
 
     echo -e "\n\n\n\n\n\nY\n\n\n\n\n" | script -qefc "./install_nanolabo_tool_linux_v3.1.bin"
     rm -f install_nanolabo_tool_linux_v3.1.bin
 
-    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
     bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda3
     rm -f Miniconda3-latest-Linux-x86_64.sh
 
