@@ -5,6 +5,11 @@ From: almalinux:9
     Maintainer Mat3ra.com
     Version nanolabo-mattersim-3.1-0
 
+%help
+    NanoLabo LAMMPS + MatterSim (requires CUDA installation mapped from the host)
+    Example command:
+    apptainer exec --nv nanolabo-mattersim.sif lammps_gnnp -i lammps.in
+
 %environment
     export PATH=/opt/AdvanceSoft/NanoLabo/exec.LINUX/lammps_parallel:/opt/AdvanceSoft/NanoLabo/exec.LINUX/neuralmd:/opt/AdvanceSoft/NanoLabo/exec.LINUX/qe_parallel:/opt/mattersim/bin:$PATH
     export LD_LIBRARY_PATH=/opt/AdvanceSoft/NanoLabo/exec.LINUX/mpi/lib:/opt/mattersim/lib:$LD_LIBRARY_PATH
@@ -17,6 +22,7 @@ From: almalinux:9
     dnf in -y wget
 
     wget https://www.apps.advancesoft.jp/nanolabo/install_nanolabo_tool_linux_v3.1.bin
+    #  oras pull ghcr.io/exabyte-io/application-containers-public/install_nanolabo_tool_linux:3.1
     chmod +x install_nanolabo_tool_linux_v3.1.bin
 
     echo -e "\n\n\n\n\n\nY\n\n\n\n\n" | script -qefc "./install_nanolabo_tool_linux_v3.1.bin"
