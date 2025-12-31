@@ -12,7 +12,7 @@ Stage: devel
     export QE_VERSION="7.5"
     export LIBXC_VERSION="7.0.0"
     export QE_INSTALL_PATH=/opt/qe-${QE_VERSION}
-    export LIBXC_INSTALL_PATH=/opt/libxc-${LIBXC_VERSION}
+    export LIBXCROOT=/opt/libxc-${LIBXC_VERSION}
 
     BUILD_DIR=~/tmp
     mkdir $BUILD_DIR
@@ -23,7 +23,7 @@ Stage: devel
     tar -xf libxc-${LIBXC_VERSION}.tar.gz
     cd libxc-${LIBXC_VERSION}
     autoreconf -i
-    ./configure --prefix=${LIBXC_INSTALL_PATH} CC=icc FC=ifort
+    ./configure --prefix=$LIBXCROOT CC=icc FC=ifort
     make install
 
     # Build Quantum ESPRESSO
