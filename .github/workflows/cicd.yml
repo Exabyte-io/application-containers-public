@@ -105,5 +105,6 @@ jobs:
 
             cd /mnt
             oras push "$oras_uri" --artifact-type "application/vnd.sylabs.sif.layer.v1.sif" "${sif_file}:application/vnd.sylabs.sif.layer.v1.sif"
+            rm -f "${sif_file}"
             cd -
           done
