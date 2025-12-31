@@ -1,0 +1,86 @@
+Bootstrap: oras
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-intel:2023.1-1
+Stage: devel
+
+%post
+    if [ -f /.singularity.d/env/91-environment.sh ]; then
+        . /.singularity.d/env/91-environment.sh
+    fi
+
+    # enable additional repos
+    dnf in -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
+    dnf in -y --nogpgcheck https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-$(rpm -E %rhel).noarch.rpm
+
+    # install lammps specific dependencies
+    dnf in -y ffmpeg \
+        ffmpeg-devel \
+        libjpeg-turbo \
+        libjpeg-turbo-devel \
+        libpng \
+        libpng-devel
+
+    export __INTEL_PRE_CFLAGS="-diag-disable=10441"
+
+    # build lammps
+    wget -q https://download.lammps.org/tars/lammps-22Jul2025_update2.tar.gz
+    tar -xf lammps-22Jul2025_update2.tar.gz
+    rm -f lammps-22Jul2025_update2.tar.gz
+    cd lammps-22Jul2025
+
+    cmake -B _build \
+        -C cmake/presets/most.cmake \
+        -C cmake/presets/nolib.cmake \
+        -C cmake/presets/intel.cmake \
+        -D CMAKE_BUILD_TYPE=Release \
+        -D BUILD_MPI=yes \
+        -D BUILD_OMP=yes \
+        -D CMAKE_CXX_STANDARD=17 \
+        -D FFT=MKL \
+        -D FFTW3_INCLUDE_DIR=${MKLROOT}/include/fftw \
+        -D KSPACE=yes \
+        -D MC=yes \
+        -D MOLECULE=yes \
+        -D QEQ=yes \
+        -D WITH_JPEG=yes \
+        -D WITH_PNG=yes \
+        -D WITH_FFMPEG=yes \
+        -D CMAKE_INSTALL_PREFIX=/opt/lammps-2025.07.22.2-intel-2023.1 ./cmake
+
+    cmake --build _build -j$(nproc)
+    cmake --install _build
+
+#-------------------------------- Final image ---------------------------------#
+
+Bootstrap: oras
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:9.7-1
+
+%labels
+    Maintainer Mat3ra.com
+    Version lammps-2025.07.22.2-intel-2023.1
+
+%help
+    LAMMPS 2025.07.22.2 (requires mapping Intel OneAPI 2023.1 from the host)
+    Example command:
+    mpirun -np 2 apptainer exec <image>.sif lmp -i in.min
+
+%files from devel
+    /opt/lammps-2025.07.22.2-intel-2023.1    /opt/
+
+%environment
+    export PATH=/opt/lammps-2025.07.22.2-intel-2023.1/bin:$PATH
+
+%post
+    # enable additional repos
+    dnf in -y --nogpgcheck https://mirrors.rpmfusion.org/free/el/rpmfusion-free-release-$(rpm -E %rhel).noarch.rpm
+    dnf in -y --nogpgcheck https://mirrors.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-$(rpm -E %rhel).noarch.rpm
+
+    # install lammps specific dependencies
+    dnf in -y ffmpeg \
+        ffmpeg-devel \
+        libjpeg-turbo \
+        libjpeg-turbo-devel \
+        libpng \
+        libpng-devel
+
+    # Clean up
+    dnf clean all && rm -rf /var/cache/yum && rm -rf /var/cache/dnf
