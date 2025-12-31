@@ -1,5 +1,5 @@
 Bootstrap: oras
-From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9.7-0
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9.7-1
 
 %labels
     Maintainer Mat3ra.com
@@ -11,7 +11,7 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9
     mpirun -np 1 apptainer exec <image>.sif lmp -i in.min
 
 %environment
-    export PATH=/usr/lib64/openmpi/bin:/opt/lammps-gnu-2025.07.22.2/bin:$PATH
+    export PATH=/usr/lib64/openmpi/bin:/opt/lammps-2025.07.22.2/bin:$PATH
     export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH
 
 %post
@@ -58,7 +58,7 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9
         -D WITH_JPEG=yes \
         -D WITH_PNG=yes \
         -D WITH_FFMPEG=yes \
-        -D CMAKE_INSTALL_PREFIX=/opt/lammps-gnu-2025.07.22.2 ./cmake
+        -D CMAKE_INSTALL_PREFIX=/opt/lammps-2025.07.22.2 ./cmake
 
     cmake --build _build -j$(nproc)
     cmake --install _build
