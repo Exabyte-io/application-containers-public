@@ -4,6 +4,8 @@ This repository contains Apptainer (Singularity) definitions of Mat3ra public
 application containers. Containers are built automatically via GitHub workflow
 and are hosted on GitHub Container Registry.
 
+![Mat3ra Container Infrastructure](./inheritance-tree.png)
+
 
 ## Managing ENV variables
 
