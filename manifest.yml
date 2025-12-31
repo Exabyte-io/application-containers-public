@@ -46,3 +46,8 @@ images:
     path: lammps/lammps-2025.07.22.2-host-intel-2023.1.def
     registry: ghcr.io/exabyte-io/application-containers-public/lammps
     tag: 2025.07.22.2-host-intel-2023.1-0
+# NanoLabo+MatterSim
+  - name: nanolabo-mattersim
+    path: nanolabo/nanolabo-mattersim.def
+    registry: ghcr.io/exabyte-io/application-containers-public/nanolabo-mattersim
+    tag: 3.1-0
