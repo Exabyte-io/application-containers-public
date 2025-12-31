@@ -83,7 +83,7 @@ jobs:
             registry=$(yq -r .images[$i].registry manifest.yml | tr '[:upper:]' '[:lower:]')
             tag=$(yq -r .images[$i].tag manifest.yml)
 
-            sif_file="/mnt/${name}-${tag}.sif"
+            sif_file="${name}-${tag}.sif"
             oras_image_with_tag="${registry}:${tag}"
             oras_uri="${oras_image_with_tag}"
 
@@ -96,12 +96,13 @@ jobs:
             fi
 
             echo "Building SIF image: $sif_file from $path"
-            apptainer build --disable-cache --bind $(pwd):/mnt --force "$sif_file" "$path"
+            apptainer build --disable-cache --bind $(pwd):/mnt --force "/mnt/${sif_file}" "$path"
 
             if [ "${{ github.event_name }}" == "pull_request" ]; then
               echo "Skipping push for pull request."
               continue
             fi
 
+            cd /mnt
             oras push "$oras_uri" --artifact-type "application/vnd.sylabs.sif.layer.v1.sif" "${sif_file}:application/vnd.sylabs.sif.layer.v1.sif"
           done
