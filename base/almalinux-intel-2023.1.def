@@ -1,5 +1,5 @@
 Bootstrap: oras
-From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:9.7-0
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:9.7-1
 
 %labels
     Maintainer Mat3ra.com
