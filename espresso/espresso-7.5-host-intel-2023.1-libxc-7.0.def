@@ -26,9 +26,6 @@ Stage: devel
     ./configure --prefix=${LIBXC_INSTALL_PATH} CC=icc FC=ifort
     make install
 
-    export LIBXC_LIBS="-L${LIBXC_INSTALL_PATH}/lib -lxcf90 -lxc"
-    export LIBXC_INCLUDE="-I${LIBXC_INSTALL_PATH}/include"
-
     # Build Quantum ESPRESSO
     cd $BUILD_DIR
     wget https://github.com/QEF/q-e/archive/refs/tags/qe-${QE_VERSION}.tar.gz
