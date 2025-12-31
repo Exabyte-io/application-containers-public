@@ -21,6 +21,7 @@ From: almalinux:9.7
         gcc-c++ \
         gcc-gfortran \
         git \
+        libtool \
         make \
         openssl-devel \
         python3 \
