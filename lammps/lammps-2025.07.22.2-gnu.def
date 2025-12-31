@@ -1,5 +1,5 @@
 Bootstrap: oras
-From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9.7-1
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9.7-0
 
 %labels
     Maintainer Mat3ra.com
@@ -12,7 +12,6 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9
 
 %environment
     export PATH=/usr/lib64/openmpi/bin:/opt/lammps-2025.07.22.2/bin:$PATH
-    export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH
 
 %post
     # source env variables from base image
