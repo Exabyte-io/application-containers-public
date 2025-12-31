@@ -1,0 +1,27 @@
+Bootstrap: oras
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:9.7-1
+
+%labels
+    Maintainer Mat3ra.com
+    Version almalinux-apptainer-nvhpc-25.3-cuda-12.8
+
+%help
+    NVIDIA HPC SDK Version 25.3 with CUDA 12.8
+
+%post
+    export NVHPC_INSTALL_DIR="/opt/nvidia/hpc_sdk"
+    export NVHPC_INSTALL_TYPE="single"
+    export NVHPC_SILENT="true"
+
+    wget -q https://developer.download.nvidia.com/hpc-sdk/25.3/nvhpc_2025_253_Linux_x86_64_cuda_12.8.tar.gz
+    tar xpzf nvhpc_2025_253_Linux_x86_64_cuda_12.8.tar.gz
+    rm -f nvhpc_2025_253_Linux_x86_64_cuda_12.8.tar.gz
+
+    nvhpc_2025_253_Linux_x86_64_cuda_12.8/install
+    rm -rf nvhpc_2025_253_Linux_x86_64_cuda_12.8
+
+    cat >> $APPTAINER_ENVIRONMENT <<'EOF'
+export LD_LIBRARY_PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/25.3/comm_libs/12.8/hpcx/hpcx-2.22.1/hcoll/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/25.3/comm_libs/12.8/hpcx/hpcx-2.22.1/ompi/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/25.3/comm_libs/12.8/hpcx/hpcx-2.22.1/nccl_rdma_sharp_plugin/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/25.3/comm_libs/12.8/hpcx/hpcx-2.22.1/sharp/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/25.3/comm_libs/12.8/hpcx/hpcx-2.22.1/ucx/mt/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/25.3/comm_libs/12.8/hpcx/hpcx-2.22.1/ucx/mt/lib/ucx:/opt/nvidia/hpc_sdk/Linux_x86_64/25.3/comm_libs/12.8/nccl/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/25.3/compilers/lib:/opt/nvidia/hpc_sdk/Linux_x86_64/25.3/cuda/12.8/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/25.3/math_libs/12.8/lib64:/opt/nvidia/hpc_sdk/Linux_x86_64/25.3/comm_libs/nvshmem/lib:$LD_LIBRARY_PATH
+
+export PATH=/opt/nvidia/hpc_sdk/Linux_x86_64/25.3/comm_libs/12.8/hpcx/hpcx-2.22.1/hcoll/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/25.3/comm_libs/12.8/hpcx/hpcx-2.22.1/ompi/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/25.3/comm_libs/12.8/hpcx/hpcx-2.22.1/ucx/mt/bin:/opt/nvidia/hpc_sdk/Linux_x86_64/25.3/cuda/bin:$PATH
+EOF
