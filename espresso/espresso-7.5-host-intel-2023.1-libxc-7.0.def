@@ -1,0 +1,85 @@
+Bootstrap: oras
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-intel:2023.1-1
+Stage: devel
+
+%post
+    if [ -f /.singularity.d/env/91-environment.sh ]; then
+        . /.singularity.d/env/91-environment.sh
+    fi
+
+    export QE_VERSION="7.5"
+    export LIBXC_VERSION="7.0.0"
+    export QE_INSTALL_PATH=/opt/qe-${QE_VERSION}
+    export LIBXCROOT=/opt/libxc-${LIBXC_VERSION}
+
+    BUILD_DIR=~/tmp
+    mkdir $BUILD_DIR
+
+    # Build LibXC
+    cd $BUILD_DIR
+    wget https://gitlab.com/libxc/libxc/-/archive/${LIBXC_VERSION}/libxc-${LIBXC_VERSION}.tar.gz
+    tar -xf libxc-${LIBXC_VERSION}.tar.gz
+    cd libxc-${LIBXC_VERSION}
+    autoreconf -i
+    ./configure --prefix=$LIBXCROOT CC=icc FC=ifort
+    make install
+
+    # Build Quantum ESPRESSO
+    cd $BUILD_DIR
+    wget https://github.com/QEF/q-e/archive/refs/tags/qe-${QE_VERSION}.tar.gz
+    tar -xf qe-${QE_VERSION}.tar.gz
+    cd q-e-qe-${QE_VERSION}
+
+    ./configure prefix=${QE_INSTALL_PATH} --with-libxc --with-libxc-prefix=$LIBXCROOT \
+        CC=mpicc \
+        FC=mpiifort \
+        F77=mpiifort \
+        F90=mpiifort \
+        MPIF90=mpiifort \
+        CXX=icc \
+        FFLAGS="-O3 -assume byterecl -g -traceback" \
+        LAPACK_LIBS="-L${MKLROOT}/lib/intel64 -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm -ldl" \
+        BLAS_LIBS="-L${MKLROOT}/lib/intel64 -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm -ldl" \
+        SCALAPACK_LIBS="-L${MKLROOT}/lib/intel64 -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm -ldl" \
+        FFT_LIBS="-L${MKLROOT}/lib/intel64 -lmkl_scalapack_lp64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lmkl_blacs_intelmpi_lp64 -lpthread -lm -ldl"
+
+    # Apply patches for Intel OneAPI compatibility
+    sed -i.bak '/^\s*DFLAGS\s*=/s/$/\ -D__FFTW/' make.inc
+
+    # Build Quantum ESPRESSO
+    make all -j$(nproc)
+
+    # Build and install additional components
+    cd EPW
+    make -j$(nproc) all
+
+    cd ../GWW/util
+    export FC=mpiifort
+    make all
+
+    # Install Quantum ESPRESSO
+    cd ../..
+    make install
+
+#-------------------------------- Final image ---------------------------------#
+
+Bootstrap: oras
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:9.7-0
+
+%labels
+    Maintainer Mat3ra.com
+    Version espresso-7.5-host-intel-2023.1-libxc-7.0-0
+
+%help
+    Quantum ESPRESSO v7.5 compiled with Intel OneAPI 2023.1 and LibXC 7.0.0.
+    This container does not bundle Intel OneAPI itself and needs to be mapped
+    from the host.
+    Example command:
+        mpirun -np 2 apptainer run /<image.sif> pw.x -in pw.in | tee pw.out
+
+%files from devel
+    /opt/qe-7.5         /opt/
+    /opt/libxc-7.0.0    /opt/
+
+%environment
+    export PATH=/opt/qe-7.5/bin:$PATH
