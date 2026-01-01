@@ -8,7 +8,7 @@ images:
   - name: almalinux-apptainer-gnu
     path: base/almalinux-gnu.def
     registry: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu
-    tag: 9.7-0
+    tag: 9.7-1
   # Intel OneAPI
   - name: almalinux-apptainer-intel
     path: base/almalinux-intel-2023.1.def
