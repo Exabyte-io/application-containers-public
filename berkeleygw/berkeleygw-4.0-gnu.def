@@ -1,0 +1,76 @@
+Bootstrap: oras
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9.7-1
+
+%labels
+    Maintainer Mat3ra.com
+    Version berkeleygw-4.0-gnu-0
+
+%help
+    BerkeleyGW 4.0 compiled with GNU libraries.
+    Example command:
+        mpirun -np 2 apptainer run <image>.sif epsilon.real.x | tee epsilon.out
+
+%environment
+    export PATH=/opt/BerkeleyGW-4.0:$PATH
+
+%post
+    if [ -f /.singularity.d/env/91-environment.sh ]; then
+        . /.singularity.d/env/91-environment.sh
+    fi
+
+    export INSTALL_PREFIX=/opt/BerkeleyGW-4.0
+
+    # https://berkeleygw.org/download
+    wget https://app.box.com/shared/static/22edl07muvhfnd900tnctsjjftbtcqc4.gz -O BerkeleyGW-4.0.tar.gz
+    # oras pull ghcr.io/exabyte-io/application-containers-public/install_nanolabo_tool_linux:4.0
+    tar -xf BerkeleyGW-4.0.tar.gz
+    rm -f BerkeleyGW-4.0.tar.gz
+    cd BerkeleyGW-4.0
+
+    # http://manual.berkeleygw.org/4.0/compilation-flags/
+    cat > arch.mk << EOF
+COMPFLAG  = -DGNU
+PARAFLAG  = -DMPI -DOMP
+MATHFLAG  = -DUSESCALAPACK -DUNPACKED -DUSEFFTW3 -DHDF5
+
+FCPP    = cpp -C -nostdinc -nostdinc++
+F90free = mpif90 -ffree-form -ffree-line-length-none -fno-second-underscore -fopenmp
+
+LINK    = mpif90 -fopenmp
+FOPTS   = -O3
+
+FNOOPTS = \$(FOPTS)
+MOD_OPT = -J
+INCFLAG = -I
+
+C_PARAFLAG  = -DPARA
+CC_COMP = mpicxx -fopenmp
+C_COMP  = mpicc -fopenmp
+C_LINK  = mpicxx -fopenmp
+C_OPTS  = -O3
+
+REMOVE  = /bin/rm -f
+
+FFTWLIB      = -L/usr/lib64 -lfftw3 -lfftw3_omp
+FFTWINCLUDE  = /usr/include
+LAPACKLIB    = -lopenblas
+BLACSDIR     = /usr/lib64
+BLACS        = -lopenblas
+SCALAPACKLIB = -lscalapack
+SCALAPACK    = -lscalapack \$(BLACS)
+
+HDF5LIB     = -L/usr/lib64/openmpi/lib -lhdf5hl_fortran -lhdf5_hl -lhdf5_fortran -lhdf5 -lz
+HDF5INCLUDE = /usr/lib64/gfortran/modules/openmpi
+
+TESTSCRIPT = make check-parallel
+EOF
+
+    make all-flavors -j$(nproc)
+
+    mkdir -p $INSTALL_PREFIX
+    for file in $( find bin \( -type f -o -type l \) \( -iname "*.x" -o -iname "*.py" -o -iname "*.sh" \) ); do
+        cp -Lv $file $INSTALL_PREFIX
+    done
+
+    cd ..
+    rm -rf BerkeleyGW-4.0

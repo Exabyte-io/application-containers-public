@@ -71,3 +71,8 @@ images:
     path: nanolabo/nanolabo-mattersim.def
     registry: ghcr.io/exabyte-io/application-containers-public/nanolabo-mattersim
     tag: 3.1-0
+# BerkeleyGW
+  - name: berkeleygw
+    path: berkeleygw/berkeleygw-4.0-gnu.def
+    registry: ghcr.io/exabyte-io/application-containers-public/berkeleygw
+    tag: 4.0-gnu-0
