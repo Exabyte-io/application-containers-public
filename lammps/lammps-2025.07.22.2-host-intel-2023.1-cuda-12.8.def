@@ -1,5 +1,5 @@
 Bootstrap: oras
-From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-intel:2023.1-1
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-intel-nvhpc:i2023.1-nv25.3-cuda-12.8-0
 Stage: devel
 
 %post
@@ -30,13 +30,15 @@ Stage: devel
     cmake -B _build \
         -C cmake/presets/most.cmake \
         -C cmake/presets/nolib.cmake \
-        -C cmake/presets/intel.cmake \
-        -D CMAKE_BUILD_TYPE=Release \
+        -C cmake/presets/gpu-cuda.cmake \
+        -D CMAKE_BUILD_TYPE="Release" \
         -D BUILD_MPI=yes \
         -D BUILD_OMP=yes \
         -D CMAKE_CXX_STANDARD=17 \
         -D FFT=MKL \
         -D FFTW3_INCLUDE_DIR=${MKLROOT}/include/fftw \
+        -D GPU_ARCH=sm_80 \
+        -D CMAKE_CUDA_ARCHITECTURES=80 \
         -D KSPACE=yes \
         -D MC=yes \
         -D MOLECULE=yes \
@@ -56,12 +58,13 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:
 
 %labels
     Maintainer Mat3ra.com
-    Version lammps-2025.07.22.2-host-intel-2023.1
+    Version lammps-2025.07.22.2-host-intel-2023.1-cuda-12.8-0
 
 %help
-    LAMMPS 2025.07.22.2 (requires mapping Intel OneAPI 2023.1 from the host)
+    LAMMPS 2025.07.22.2 (requires mapping Intel OneAPI 2023.1 and CUDA 12.8 from
+    the host)
     Example command:
-    mpirun -np 2 apptainer exec <image>.sif lmp -i in.min
+    mpirun -np 1 apptainer exec --nv <image>.sif lmp -sf gpu -pk gpu 1 -i in.min
 
 %files from devel
     /opt/lammps-2025.07.22.2    /opt/
