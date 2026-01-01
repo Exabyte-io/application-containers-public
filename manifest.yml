@@ -4,7 +4,7 @@ images:
   - name: almalinux-apptainer-base
     path: base/almalinux-base.def
     registry: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base
-    tag: 9.7-1
+    tag: 9.7-2
   - name: almalinux-apptainer-gnu
     path: base/almalinux-gnu.def
     registry: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu
