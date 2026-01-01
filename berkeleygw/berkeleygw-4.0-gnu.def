@@ -22,7 +22,7 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9
 
     # https://berkeleygw.org/download
     wget https://app.box.com/shared/static/22edl07muvhfnd900tnctsjjftbtcqc4.gz -O BerkeleyGW-4.0.tar.gz
-    # oras pull ghcr.io/exabyte-io/application-containers-public/install_nanolabo_tool_linux:4.0
+    # oras pull ghcr.io/exabyte-io/application-containers-public/berkeleygw_src:4.0
     tar -xf BerkeleyGW-4.0.tar.gz
     rm -f BerkeleyGW-4.0.tar.gz
     cd BerkeleyGW-4.0
