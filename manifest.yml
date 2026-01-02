@@ -3,71 +3,61 @@ images:
   # GNU
   - name: almalinux-apptainer-base
     path: base/almalinux-base.def
-    registry: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base
     tag: 9.7-2
   - name: almalinux-apptainer-gnu
     path: base/almalinux-gnu.def
-    registry: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu
     tag: 9.7-1
   # Intel OneAPI
   - name: almalinux-apptainer-intel
     path: base/almalinux-intel-2023.1.def
-    registry: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-intel
     tag: 2023.1-1
   # NVIDIA HPC SDK
   - name: almalinux-apptainer-nvhpc
     path: base/almalinux-nvhpc-25.3-cuda-12.8.def
-    registry: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-nvhpc
     tag: 25.3-cuda-12.8-0
   # Intel OneAPI + NVIDIA HPC SDK
   - name: almalinux-apptainer-intel-nvhpc
     path: base/almalinux-intel-2023.1-nvhpc-25.3-cuda-12.8.def
-    registry: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-intel-nvhpc
     tag: i2023.1-nv25.3-cuda-12.8-0
 # Quantum ESPRESSO
   # GNU
   - name: espresso
     path: espresso/espresso-6.3-gnu.def
-    registry: ghcr.io/exabyte-io/application-containers-public/espresso
     tag: 6.3-gnu-0
   - name: espresso
     path: espresso/espresso-7.5-gnu.def
-    registry: ghcr.io/exabyte-io/application-containers-public/espresso
     tag: 7.5-gnu-0
   # Intel
   - name: espresso
     path: espresso/espresso-7.5-host-intel-2023.1-libxc-7.0.def
-    registry: ghcr.io/exabyte-io/application-containers-public/espresso
     tag: 7.5-host-intel-2023.1-libxc-7.0-0
   # CUDA
   - name: espresso
     path: espresso/espresso-7.5-host-cuda-12.8.def
-    registry: ghcr.io/exabyte-io/application-containers-public/espresso
     tag: 7.5-host-cuda-12.8-0
 # NWChem
   # GNU
   - name: nwchem
     path: nwchem/nwchem-7.0.2-gnu.def
-    registry: ghcr.io/exabyte-io/application-containers-public/nwchem
     tag: 7.0.2-gnu-0
 # LAMMPS
   # GNU
   - name: lammps
     path: lammps/lammps-2025.07.22.2-gnu.def
-    registry: ghcr.io/exabyte-io/application-containers-public/lammps
     tag: 2025.07.22.2-gnu-0
   # Intel
   - name: lammps
     path: lammps/lammps-2025.07.22.2-host-intel-2023.1.def
-    registry: ghcr.io/exabyte-io/application-containers-public/lammps
     tag: 2025.07.22.2-host-intel-2023.1-0
   # Intel + CUDA
   - name: lammps
     path: lammps/lammps-2025.07.22.2-host-intel-2023.1-cuda-12.8.def
-    registry: ghcr.io/exabyte-io/application-containers-public/lammps
     tag: 2025.07.22.2-host-intel-2023.1-cuda-12.8-0
 # NanoLabo+MatterSim
   - name: nanolabo-mattersim
     path: nanolabo/nanolabo-mattersim.def
-    registry: ghcr.io/exabyte-io/application-containers-public/nanolabo-mattersim
     tag: 3.1-0
+# BerkeleyGW
+  - name: berkeleygw
+    path: berkeleygw/berkeleygw-4.0-gnu.def
+    tag: 4.0-gnu-0
