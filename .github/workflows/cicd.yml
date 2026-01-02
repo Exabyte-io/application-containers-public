@@ -80,7 +80,7 @@ jobs:
           for i in $(seq 0 $((images_count - 1))); do
             name=$(yq -r .images[$i].name manifest.yml)
             path=$(yq -r .images[$i].path manifest.yml)
-            registry=$(echo "ghcr.io/${{ github.repository_owner }}/${{ github.repository }}/${name}" | tr '[:upper:]' '[:lower:]')
+            registry=$(echo "ghcr.io/${{ github.repository }}/${name}" | tr '[:upper:]' '[:lower:]')
             tag=$(yq -r .images[$i].tag manifest.yml)
 
             sif_file="${name}-${tag}.sif"
