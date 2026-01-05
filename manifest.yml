@@ -54,9 +54,9 @@ images:
     path: lammps/lammps-2025.07.22.2-host-intel-2023.1-cuda-12.8.def
     tag: 2025.07.22.2-host-intel-2023.1-cuda-12.8-0
 # NanoLabo+MatterSim
-  - name: nanolabo-mattersim
-    path: nanolabo/nanolabo-mattersim.def
-    tag: 3.1-0
+  - name: nanolabo
+    path: nanolabo/nanolabo-3.1-mattersim.def
+    tag: 3.1-mattersim-0
 # BerkeleyGW
   - name: berkeleygw
     path: berkeleygw/berkeleygw-4.0-gnu.def
