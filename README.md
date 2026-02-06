@@ -11,10 +11,15 @@ and are hosted on GitHub Container Registry.
 1. Create a new directory corresponding to the application if it is not already
 present
 2. Create new definition file
-3. Add new container entry to `manifest.yml` to built images automatically via
+3. Bootstrap from existing base images wherever possible
+4. For large dependencies like Intel OneAPI or NVIDIA HPC SDK, we can use
+apptainer `--bind` directive to map the host installation to the container. This
+is not applicable if such dependencies are not installed on the host clusters,
+in which case package the dependencies into the application container.
+5. Add new container entry to `manifest.yml` to built images automatically via
 GitHub workflow
-4. Use application version as tag name, followed by dependency/<wbr/>toolchain
-version information. Finally, we add `-N` numeric suffix to denote the build
+6. Use application version as tag name, followed by dependency/<wbr/>toolchain
+version information. Finally, add `-N` numeric suffix to denote the build
 iteration starting from 0.
 
 ## Managing ENV variables
