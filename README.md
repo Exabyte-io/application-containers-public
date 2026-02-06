@@ -8,19 +8,16 @@ and are hosted on GitHub Container Registry.
 
 ## How to add new application container?
 
-1. Create a new directory corresponding to the application if it is not already
-present
-2. Create new definition file
-3. Bootstrap from existing base images wherever possible
-4. For large dependencies like Intel OneAPI or NVIDIA HPC SDK, we can use
-apptainer `--bind` directive to map the host installation to the container. This
-is not applicable if such dependencies are not installed on the host clusters,
-in which case package the dependencies into the application container.
-5. Add new container entry to `manifest.yml` to built images automatically via
+1. Create apptainer definition file under the corresponding application
+directory
+2. Bootstrap from existing base images wherever possible
+3. Add new container entry to `manifest.yml` to built images automatically via
 GitHub workflow
-6. Use application version as tag name, followed by dependency/<wbr/>toolchain
+4. Use application version as tag, followed by dependency/<wbr/>toolchain
 version information. Finally, add `-N` numeric suffix to denote the build
-iteration starting from 0.
+iteration starting from 0. New builds are triggered when the tag is updated.
+5. For large dependencies like Intel OneAPI or NVIDIA HPC SDK, we can use
+apptainer `--bind` directive to map the host installation to the container.
 
 ## Managing ENV variables
 
