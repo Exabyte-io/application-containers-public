@@ -6,6 +6,16 @@ and are hosted on GitHub Container Registry.
 
 ![Mat3ra Container Infrastructure](./inheritance-tree.png)
 
+## How to add new application container?
+
+1. Create a new directory corresponding to the application if it is not already
+present
+2. Create new definition file
+3. Add new container entry to `manifest.yml` to built images automatically via
+GitHub workflow
+4. Use application version as tag name, followed by dependency/<wbr/>toolchain
+version information. Finally, we add `-N` numeric suffix to denote the build
+iteration starting from 0.
 
 ## Managing ENV variables
 
