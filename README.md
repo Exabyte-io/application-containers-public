@@ -9,11 +9,11 @@ and are hosted on GitHub Container Registry.
 ## How to download images?
 
 Images are packaged as SIF (ORAS) files and are hosted on GitHub Container
-Registry. Please find the list of images under [packages](./packages), select
-appropriate `tag`, and copy its URL. We can use `apptainer pull` command to
-download images. For example, to download GNU build of Quantum ESPRESSO v6.3,
-we can use the following command:
-
+Registry. Please find the list of images under [packages](
+https://github.com/orgs/Exabyte-io/packages?repo_name=application-containers-public),
+select the appropriate `tag`, and copy its URL. We can use `apptainer pull`
+command to download images. For example, to download GNU build of Quantum
+ESPRESSO v6.3, we can use the following command:
 ```console
 apptainer pull oras://ghcr.io/exabyte-io/application-containers-public/espresso:6.3-gnu-0
 ```
