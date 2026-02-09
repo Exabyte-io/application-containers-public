@@ -6,6 +6,40 @@ and are hosted on GitHub Container Registry.
 
 ![Mat3ra Container Infrastructure](./inheritance-tree.png)
 
+## How to download images?
+
+Images are packaged as SIF (ORAS) files and are hosted on GitHub Container
+Registry. Please find the list of images under [packages](./packages), select
+appropriate `tag`, and copy its URL. We can use `apptainer pull` command to
+download images. For example, to download GNU build of Quantum ESPRESSO v6.3,
+we can use the following command:
+
+```console
+apptainer pull oras://ghcr.io/exabyte-io/application-containers-public/espresso:6.3-gnu-0
+```
+
+## How to run containers?
+
+We can use `apptainer exec` command to run applications packaged in containers.
+
+```console
+apptainer exec <image>.sif <command>
+apptainer exec espresso-6.3-gnu-0.sif pw.x -in pw.in > pw.out
+```
+
+We can map host directories to the container using `--bind` directive if needed.
+
+```console
+apptainer exec --bind /path/to/host:/path/to/container <image>.sif <command>
+apptainer exec --bind /export espresso-6.3-gnu-0.sif pw.x -in pw.in > pw.out
+```
+
+Use `--nv` flag to enable NVIDIA GPU support.
+
+```console
+apptainer exec --nv <image>.sif <command>
+```
+
 ## How to add new application container?
 
 1. Create apptainer definition file under the corresponding application
