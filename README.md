@@ -6,6 +6,57 @@ and are hosted on GitHub Container Registry.
 
 ![Mat3ra Container Infrastructure](./inheritance-tree.png)
 
+## How to download images?
+
+Images are packaged as SIF (ORAS) files and are hosted on GitHub Container
+Registry. Please find the list of images under [packages](
+https://github.com/orgs/Exabyte-io/packages?repo_name=application-containers-public),
+select the appropriate `tag`, and copy its URL. We can use `apptainer pull`
+command to download images. For example, to download GNU build of Quantum
+ESPRESSO v6.3, we can use the following command:
+```console
+apptainer pull oras://ghcr.io/exabyte-io/application-containers-public/espresso:6.3-gnu-0
+```
+
+## How to run containers?
+
+We can use `apptainer exec` command to run applications packaged in containers.
+
+```console
+apptainer exec <image>.sif <command>
+apptainer exec espresso-6.3-gnu-0.sif pw.x -in pw.in > pw.out
+```
+
+We can map host directories to the container using `--bind` directive if needed.
+
+```console
+apptainer exec --bind /path/to/host:/path/to/container <image>.sif <command>
+apptainer exec --bind /export espresso-6.3-gnu-0.sif pw.x -in pw.in > pw.out
+```
+
+Use `--nv` flag to enable NVIDIA GPU support.
+
+```console
+apptainer exec --nv <image>.sif <command>
+```
+
+## How to add new application container?
+
+1. Create apptainer definition file under the corresponding application
+directory
+2. Bootstrap from existing base images wherever possible
+3. Add new container entry to `manifest.yml` to built images automatically via
+GitHub workflow
+4. Use application version as tag, followed by dependency/<wbr/>toolchain
+version information. Finally, add `-N` numeric suffix to denote the build
+iteration starting from 0. New builds are triggered when the tag is updated.
+5. For large dependencies like Intel OneAPI or NVIDIA HPC SDK, we can use
+apptainer `--bind` directive to map the host installation to the container.
+6. Finally, to add an application to the Mat3ra platform, create a pull request
+to the [standata](https://github.com/Exabyte-io/standata) repository with the
+new application configuration data under
+`standata/assets/applications/applications` directory (please refer to existing
+configurations for reference).
 
 ## Managing ENV variables
 
