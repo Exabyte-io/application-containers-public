@@ -1,0 +1,11 @@
+Bootstrap: docker
+From: ghcr.io/deepmodeling/deepmd-kit:3.1.2_cpu
+
+%labels
+    Maintainer Mat3ra.com
+    Version deepmd-3.1.2-cpu-0
+
+%environment
+    export OMP_NUM_THREADS=1
+    export TF_INTRA_OP_PARALLELISM_THREADS=1
+    export TF_INTER_OP_PARALLELISM_THREADS=1
