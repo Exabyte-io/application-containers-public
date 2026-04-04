@@ -83,7 +83,7 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:
 
 %post
     dnf in -y \
-    dma-core \
+    rdma-core \
     libfabric \
     ucx \
     ucx-rdmacm \
