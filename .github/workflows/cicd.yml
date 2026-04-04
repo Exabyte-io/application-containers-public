@@ -25,12 +25,12 @@ jobs:
       - name: Set up Apptainer
         uses: eWaterCycle/setup-apptainer@v2
         with:
-          apptainer-version: '1.4.4'
+          apptainer-version: '1.4.5'
 
       - name: setup oras
         uses: oras-project/setup-oras@v1
         with:
-          version: 1.3.0
+          version: '1.3.1'
 
       - name: Login to GHCR for ORAS
         run: echo "${{ secrets.GITHUB_TOKEN }}" | oras login ghcr.io --username ${{ github.actor }} --password-stdin
