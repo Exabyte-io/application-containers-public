@@ -64,11 +64,11 @@ Stage: devel
 #-------------------------------- Final image ---------------------------------#
 
 Bootstrap: oras
-From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:9.7-1
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:9.7-2
 
 %labels
     Maintainer Mat3ra.com
-    Version espresso-7.5-host-intel-2023.1-libxc-7.0-0
+    Version espresso-7.5-host-intel-2023.1-libxc-7.0-1
 
 %help
     Quantum ESPRESSO v7.5 compiled with Intel OneAPI 2023.1 and LibXC 7.0.0.
@@ -80,6 +80,18 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:
 %files from devel
     /opt/qe-7.5         /opt/
     /opt/libxc-7.0.0    /opt/
+
+%post
+    dnf in -y \
+    rdma-core \
+    libfabric \
+    ucx \
+    ucx-rdmacm \
+    ucx-ib \
+    libibverbs-utils
+
+    # Clean up
+    dnf clean all && rm -rf /var/lib/dnf /var/cache/dnf /var/cache/yum
 
 %environment
     export PATH=/opt/qe-7.5/bin:$PATH
