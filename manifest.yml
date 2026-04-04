@@ -30,7 +30,7 @@ images:
   # Intel
   - name: espresso
     path: espresso/espresso-7.5-host-intel-2023.1-libxc-7.0.def
-    tag: 7.5-host-intel-2023.1-libxc-7.0-0
+    tag: 7.5-host-intel-2023.1-libxc-7.0-1
   # CUDA
   - name: espresso
     path: espresso/espresso-7.5-host-cuda-12.8.def
