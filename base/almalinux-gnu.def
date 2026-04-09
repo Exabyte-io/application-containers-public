@@ -18,8 +18,8 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:
     scalapack-openmpi-devel \
     rdma-core \
     ucx \
-    ucx-rdmacm \
-    ucx-ib
+    ucx-ib \
+    ucx-rdmacm
 
     # enable ucx, disable legacy openib
     mkdir -p /etc/openmpi
