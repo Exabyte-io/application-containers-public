@@ -3,7 +3,7 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:
 
 %labels
     Maintainer Mat3ra.com
-    Version almalinux-apptainer-gnu-9.7-0
+    Version almalinux-apptainer-gnu-9.7-2
 
 %post
     dnf install -y \
@@ -15,8 +15,16 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:
     openblas-devel \
     openmpi \
     openmpi-devel \
-    scalapack-openmpi-devel
+    scalapack-openmpi-devel \
+    rdma-core \
+    ucx \
+    ucx-rdmacm \
+    ucx-ib
 
+    # enable ucx, disable legacy openib
+    mkdir -p /etc/openmpi
+    echo "pml = ucx" >> /etc/openmpi/openmpi-mca-params.conf
+    echo "btl = ^openib" >> /etc/openmpi/openmpi-mca-params.conf
 
     # Clean up
     dnf clean all && rm -rf /var/lib/dnf /var/cache/dnf /var/cache/yum
@@ -24,4 +32,12 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:
     cat >> $APPTAINER_ENVIRONMENT <<'EOF'
 export LD_LIBRARY_PATH=/usr/lib64/openmpi/lib:$LD_LIBRARY_PATH
 export PATH=/usr/lib64/openmpi/bin:$PATH
+
+# disable legacy ucx posix link
+export UCX_POSIX_USE_PROC_LINK=n
+
+# set infiniband device when available
+if [ -d /sys/class/infiniband ]; then
+    export UCX_NET_DEVICES=mlx5_0:1
+fi
 EOF
