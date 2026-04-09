@@ -6,7 +6,7 @@ images:
     tag: 9.7-2
   - name: almalinux-apptainer-gnu
     path: base/almalinux-gnu.def
-    tag: 9.7-1
+    tag: 9.7-2
   # Intel OneAPI
   - name: almalinux-apptainer-intel
     path: base/almalinux-intel-2023.1.def

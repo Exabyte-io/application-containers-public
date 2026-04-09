@@ -3,7 +3,7 @@ From: almalinux:9.7
 
 %labels
     Maintainer Mat3ra.com
-    Version almalinux-apptainer-base-9.7-0
+    Version almalinux-apptainer-base-9.7-2
 
 %help
     AlmaLinux base image containing GCC and other essential build tools.
