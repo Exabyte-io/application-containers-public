@@ -1,9 +1,9 @@
 Bootstrap: oras
-From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9.7-0
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9.7-2
 
 %labels
     Maintainer Mat3ra.com
-    Version espresso-6.3-gnu-0
+    Version espresso-6.3-gnu-1
 
 %environment
     export PATH=/opt/qe-6.3/bin:$PATH
