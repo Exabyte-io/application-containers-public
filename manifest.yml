@@ -23,14 +23,14 @@ images:
   # GNU
   - name: espresso
     path: espresso/espresso-6.3-gnu.def
-    tag: 6.3-gnu-0
+    tag: 6.3-gnu-1
   - name: espresso
     path: espresso/espresso-7.5-gnu.def
-    tag: 7.5-gnu-0
+    tag: 7.5-gnu-1
   # Intel
   - name: espresso
     path: espresso/espresso-7.5-host-intel-2023.1-libxc-7.0.def
-    tag: 7.5-host-intel-2023.1-libxc-7.0-1
+    tag: 7.5-host-intel-2023.1-libxc-7.0-2
   # CUDA
   - name: espresso
     path: espresso/espresso-7.5-host-cuda-12.8.def
