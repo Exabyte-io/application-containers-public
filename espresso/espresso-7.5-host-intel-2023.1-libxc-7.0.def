@@ -93,7 +93,8 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:
     export PATH=/opt/qe-7.5/bin:$PATH
 
     # enable infiniband when available
-    if [ -d /sys/class/infiniband ]; then
+    if [ -f /sys/class/infiniband/mlx5_0/ports/1/state ] && \
+        grep -q "ACTIVE" /sys/class/infiniband/mlx5_0/ports/1/state; then
         export FI_PROVIDER="verbs"
         export FI_VERBS_IFACE="mlx5_0"
     fi
