@@ -37,7 +37,8 @@ export PATH=/usr/lib64/openmpi/bin:$PATH
 export UCX_POSIX_USE_PROC_LINK=n
 
 # set infiniband device when available
-if [ -d /sys/class/infiniband ]; then
+if [ -f /sys/class/infiniband/mlx5_0/ports/1/state ] && \
+        grep -q "ACTIVE" /sys/class/infiniband/mlx5_0/ports/1/state; then
     export UCX_NET_DEVICES=mlx5_0:1
 fi
 EOF
