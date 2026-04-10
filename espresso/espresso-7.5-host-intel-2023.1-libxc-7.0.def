@@ -94,7 +94,7 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:
 
     # enable infiniband when available
     if [ -f /sys/class/infiniband/mlx5_0/ports/1/state ] && \
-        grep -q "ACTIVE" /sys/class/infiniband/mlx5_0/ports/1/state; then
+            grep -q "ACTIVE" /sys/class/infiniband/mlx5_0/ports/1/state; then
         export FI_PROVIDER="verbs"
         export FI_VERBS_IFACE="mlx5_0"
     fi
