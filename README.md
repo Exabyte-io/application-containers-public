@@ -109,4 +109,4 @@ definition.
 ## Links
 - https://docs.mat3ra.com/cli/actions/add-software/
 - https://apptainer.org/docs/admin/latest/
-- [YouTubeTutorial: Build containerized applications with GPU support](https://www.youtube.com/watch?v=G1hfW_kS8oY)
+- [YouTube Tutorial: Build containerized applications with GPU support](https://www.youtube.com/watch?v=G1hfW_kS8oY)
