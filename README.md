@@ -107,4 +107,5 @@ output, and substitute them runtime.
 definition.
 
 ## Links
+- https://docs.mat3ra.com/cli/actions/add-software/
 - https://apptainer.org/docs/admin/latest/
