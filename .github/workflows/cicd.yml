@@ -19,6 +19,7 @@ jobs:
       packages: write
       contents: read
     strategy:
+      fail-fast: false
       matrix:
         include:
           - runner: ubuntu-24.04
@@ -79,7 +80,7 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/share/swift
 
-          sudo apt-get clean
+          sudo apt clean || true
           sudo rm -rf /var/lib/apt/lists/*
 
           sudo docker system prune -af --volumes || true
