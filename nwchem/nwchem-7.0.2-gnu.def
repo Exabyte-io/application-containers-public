@@ -14,7 +14,7 @@ From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-gnu:9
 
     cd /opt
     mkdir source
-    wget https://github.com/nwchemgit/nwchem/archive/refs/tags/v7.0.2-release.tar.gz
+    wget -q https://github.com/nwchemgit/nwchem/archive/refs/tags/v7.0.2-release.tar.gz
     tar -zxf v7.0.2-release.tar.gz --strip 1 -C ./source
     cd source
     export INSTALL_PATH=/opt/nwchem-7.0.2

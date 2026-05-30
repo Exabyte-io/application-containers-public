@@ -8,12 +8,23 @@ on:
     branches:
       - main
 
+env:
+  YQ_VERSION: '4.53.2'
+  YQ_URL: https://github.com/mikefarah/yq/releases/download
+
 jobs:
   build-and-push:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
     permissions:
       packages: write
       contents: read
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            arch: x86_64
+          - runner: ubuntu-24.04-arm
+            arch: arm64
 
     steps:
       - name: Checkout repository
@@ -36,7 +47,14 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | oras login ghcr.io --username ${{ github.actor }} --password-stdin
 
       - name: Setup yq
-        uses: mikefarah/yq@0f4fb8d35ec1a939d78dd6862f494d19ec589f19 # v4.52.5
+        run: |
+          if [ "${{ matrix.arch }}" = "arm64" ]; then
+            sudo wget -q ${{env.YQ_URL}}/v${{ env.YQ_VERSION }}/yq_linux_arm64 -O /usr/bin/yq
+          else
+            sudo wget -q ${{env.YQ_URL}}/v${{ env.YQ_VERSION }}/yq_linux_amd64 -O /usr/bin/yq
+          fi
+          sudo chmod +x /usr/bin/yq
+
 
       - name: Login to GitHub Container registry
         uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
@@ -81,8 +99,25 @@ jobs:
             registry=$(echo "ghcr.io/${{ github.repository }}/${name}" | tr '[:upper:]' '[:lower:]')
             tag=$(yq -r .images[$i].tag manifest.yml)
 
-            sif_file="${name}-${tag}.sif"
-            oras_image_with_tag="${registry}:${tag}"
+            # Read the build_arm property (defaults to "null" if missing)
+            build_arm=$(yq -r .images[$i].build_arm manifest.yml)
+
+            # Skip ARM compilation entirely if the flag is missing or not true
+            if [ "${{ matrix.arch }}" = "arm64" ] && [ "$build_arm" != "true" ]; then
+              echo "Skipping $name for arm64 because build_arm is not set to true."
+              continue
+            fi
+
+            # Dynamically determine the architecture suffix string
+            if [ "$build_arm" = "true" ]; then
+              arch_suffix=".${{ matrix.arch }}"
+            else
+              arch_suffix=""
+            fi
+
+            # Apply the suffix dynamically to the files and registry tags
+            sif_file="${name}-${tag}${arch_suffix}.sif"
+            oras_image_with_tag="${registry}:${tag}${arch_suffix}"
             oras_uri="${oras_image_with_tag}"
 
             # Check if the image/tag exists remotely.
