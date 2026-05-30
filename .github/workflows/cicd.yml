@@ -9,8 +9,6 @@ on:
       - main
 
 env:
-  APPTAINER_VERSION: '1.4.5'
-  APPTAINER_URL: https://github.com/apptainer/apptainer/releases/download
   YQ_VERSION: '4.53.2'
   YQ_URL: https://github.com/mikefarah/yq/releases/download
 
@@ -46,10 +44,9 @@ jobs:
 
       - name: Set up Apptainer
         run: |
-          APPTAINER_DEB="apptainer_${{ env.APPTAINER_VERSION }}-${{ env.DEB_ARCH }}.deb"
-          wget -q "${{ env.APPTAINER_URL }}/v${{ env.APPTAINER_VERSION }}/${APPTAINER_DEB}"
-          sudo apt-get install -y "./${APPTAINER_DEB}"
-          rm -f "./${APPTAINER_DEB}"
+          sudo add-apt-repository -y ppa:apptainer/ppa
+          sudo apt update
+          sudo apt install -y apptainer-suid
 
       - name: setup oras
         uses: oras-project/setup-oras@38de303aac69abb66f3e6255b7198bff35f323e3 # v2.0.0
