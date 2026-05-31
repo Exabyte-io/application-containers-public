@@ -1,9 +1,9 @@
 Bootstrap: docker
-From: almalinux:9.7
+From: almalinux:9.8
 
 %labels
     Maintainer Mat3ra.com
-    Version almalinux-apptainer-base-9.7-2
+    Version almalinux-apptainer-base-9.8-0
 
 %help
     AlmaLinux base image containing GCC and other essential build tools.
