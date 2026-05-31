@@ -131,7 +131,16 @@ jobs:
             fi
 
             cd /mnt
-            oras push "$oras_uri" --artifact-type "application/vnd.sylabs.sif.layer.v1.sif" "${sif_file}:application/vnd.sylabs.sif.layer.v1.sif"
+            if [ "${{ matrix.arch }}" = "arm64" ]; then
+              TARGET_PLATFORM="linux/arm64"
+            else
+              TARGET_PLATFORM="linux/amd64"
+            fi
+
+            oras push "$oras_uri" \
+              --artifact-type "application/vnd.sylabs.sif.layer.v1.sif" \
+              --artifact-platform "$TARGET_PLATFORM" \
+              "${sif_file}:application/vnd.sylabs.sif.layer.v1.sif"
             rm -f "${sif_file}"
             cd -
           done
@@ -174,8 +183,6 @@ jobs:
               echo "Stitching Multi-Arch Index for ${unified_target}"
 
               # Combine individual images into a single manifest index reference
-              oras manifest index create "${unified_target}" \
-                "${registry}:${tag}.x86_64:linux/amd64" \
-                "${registry}:${tag}.arm64:linux/arm64"
+              oras manifest index create "${unified_target}" "${registry}:${tag}.x86_64" "${registry}:${tag}.arm64"
             fi
           done

@@ -3,7 +3,7 @@ images:
   # GNU
   - name: almalinux-apptainer-base
     path: base/almalinux-base.def
-    tag: 9.8-1
+    tag: 9.8-2
     build_arm: true
   - name: almalinux-apptainer-gnu
     path: base/almalinux-gnu.def
