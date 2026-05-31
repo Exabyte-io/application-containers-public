@@ -25,7 +25,8 @@ images:
   # GNU
   - name: espresso
     path: espresso/espresso-6.3-gnu.def
-    tag: 6.3-gnu-1
+    tag: 6.3-gnu-2
+    build_arm: true
   - name: espresso
     path: espresso/espresso-7.5-gnu.def
     tag: 7.5-gnu-1
