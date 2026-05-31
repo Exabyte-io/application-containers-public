@@ -1,9 +1,9 @@
 Bootstrap: oras
-From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:9.8-0
+From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:9.7-2
 
 %labels
     Maintainer Mat3ra.com
-    Version almalinux-apptainer-gnu-9.8-0
+    Version almalinux-apptainer-gnu-9.7-2
 
 %post
     dnf install -y \
