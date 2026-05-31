@@ -8,10 +8,6 @@ on:
     branches:
       - main
 
-env:
-  YQ_VERSION: '4.53.2'
-  YQ_URL: https://github.com/mikefarah/yq/releases/download
-
 jobs:
   build-and-push:
     runs-on: ${{ matrix.runner }}
@@ -28,14 +24,6 @@ jobs:
             arch: arm64
 
     steps:
-      - name: Set Debian Architecture Environment Variable
-        run: |
-          if [ "${{ matrix.arch }}" = "arm64" ]; then
-            echo "DEB_ARCH=arm64" >> $GITHUB_ENV
-          else
-            echo "DEB_ARCH=amd64" >> $GITHUB_ENV
-          fi
-
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -59,7 +47,7 @@ jobs:
       - name: Setup yq (only for arm64)
         if: matrix.arch == 'arm64'
         run: |
-          sudo wget -q ${{ env.YQ_URL }}/v${{ env.YQ_VERSION }}/yq_linux_${{ env.DEB_ARCH }} -O /usr/bin/yq
+          sudo wget -q https://github.com/mikefarah/yq/releases/download/v4.53.2/yq_linux_arm64 -O /usr/bin/yq
           sudo chmod +x /usr/bin/yq
 
       - name: Login to GitHub Container registry
