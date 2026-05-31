@@ -98,7 +98,7 @@ jobs:
 
             # Skip ARM compilation entirely if the flag is missing or not true
             if [ "${{ matrix.arch }}" = "arm64" ] && [ "$build_arm" != "true" ]; then
-              echo "Skipping $name for arm64 because build_arm is not set to true."
+              echo "Skipping $name $tag for arm64 because build_arm is not set to true."
               continue
             fi
 
