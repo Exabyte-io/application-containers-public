@@ -174,8 +174,6 @@ jobs:
               echo "Stitching Multi-Arch Index for ${unified_target}"
 
               # Combine individual images into a single manifest index reference
-              oras manifest index create "${unified_target}" \
-                "${registry}:${tag}.x86_64:linux/amd64" \
-                "${registry}:${tag}.arm64:linux/arm64"
+              oras manifest index create "${unified_target}" "${registry}:${tag}.x86_64" "${registry}:${tag}.arm64"
             fi
           done
