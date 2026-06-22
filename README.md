@@ -53,8 +53,8 @@ iteration starting from 0. New builds are triggered when the tag is updated.
 5. For large dependencies like Intel OneAPI or NVIDIA HPC SDK, we can use
 apptainer `--bind` directive to map the host installation to the container.
 6. Finally, to add an application to the Mat3ra platform, create a pull request
-to the [standata](https://github.com/mat3ra/standata) repository with the
-new application configuration data under
+to the [standata](https://github.com/mat3ra/standata) repository with the new
+application configuration data under
 `standata/assets/applications/applications` directory (please refer to existing
 configurations for reference).
 
