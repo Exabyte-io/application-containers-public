@@ -3,10 +3,12 @@ images:
   # GNU
   - name: almalinux-apptainer-base
     path: base/almalinux-base.def
-    tag: 9.7-2
+    tag: 9.8-2
+    build_arm: true
   - name: almalinux-apptainer-gnu
     path: base/almalinux-gnu.def
-    tag: 9.7-2
+    tag: 9.8-0
+    build_arm: true
   # Intel OneAPI
   - name: almalinux-apptainer-intel
     path: base/almalinux-intel-2023.1.def
@@ -23,7 +25,8 @@ images:
   # GNU
   - name: espresso
     path: espresso/espresso-6.3-gnu.def
-    tag: 6.3-gnu-1
+    tag: 6.3-gnu-2
+    build_arm: true
   - name: espresso
     path: espresso/espresso-7.5-gnu.def
     tag: 7.5-gnu-1
