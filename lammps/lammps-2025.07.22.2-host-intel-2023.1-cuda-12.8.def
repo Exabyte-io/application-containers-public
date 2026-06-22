@@ -1,5 +1,5 @@
 Bootstrap: oras
-From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-intel-nvhpc:i2023.1-nv25.3-cuda-12.8-0
+From: ghcr.io/mat3ra/application-containers-public/almalinux-apptainer-intel-nvhpc:i2023.1-nv25.3-cuda-12.8-0
 Stage: devel
 
 %post
@@ -54,7 +54,7 @@ Stage: devel
 #-------------------------------- Final image ---------------------------------#
 
 Bootstrap: oras
-From: ghcr.io/exabyte-io/application-containers-public/almalinux-apptainer-base:9.7-1
+From: ghcr.io/mat3ra/application-containers-public/almalinux-apptainer-base:9.7-1
 
 %labels
     Maintainer Mat3ra.com
