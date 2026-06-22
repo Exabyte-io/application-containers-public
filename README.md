@@ -10,12 +10,12 @@ and are hosted on GitHub Container Registry.
 
 Images are packaged as SIF (ORAS) files and are hosted on GitHub Container
 Registry. Please find the list of images under [packages](
-https://github.com/orgs/Exabyte-io/packages?repo_name=application-containers-public),
+https://github.com/orgs/mat3ra/packages?repo_name=application-containers-public),
 select the appropriate `tag`, and copy its URL. We can use `apptainer pull`
 command to download images. For example, to download GNU build of Quantum
 ESPRESSO v6.3, we can use the following command:
 ```console
-apptainer pull oras://ghcr.io/exabyte-io/application-containers-public/espresso:6.3-gnu-0
+apptainer pull oras://ghcr.io/mat3ra/application-containers-public/espresso:6.3-gnu-0
 ```
 
 ## How to run containers?
@@ -53,7 +53,7 @@ iteration starting from 0. New builds are triggered when the tag is updated.
 5. For large dependencies like Intel OneAPI or NVIDIA HPC SDK, we can use
 apptainer `--bind` directive to map the host installation to the container.
 6. Finally, to add an application to the Mat3ra platform, create a pull request
-to the [standata](https://github.com/Exabyte-io/standata) repository with the
+to the [standata](https://github.com/mat3ra/standata) repository with the
 new application configuration data under
 `standata/assets/applications/applications` directory (please refer to existing
 configurations for reference).

@@ -22,7 +22,7 @@ From: almalinux:9
     dnf in -y wget
 
     wget -q https://www.apps.advancesoft.jp/nanolabo/install_nanolabo_tool_linux_v3.1.bin
-    #  oras pull ghcr.io/exabyte-io/application-containers-public/install_nanolabo_tool_linux:3.1
+    #  oras pull ghcr.io/mat3ra/application-containers-public/install_nanolabo_tool_linux:3.1
     chmod +x install_nanolabo_tool_linux_v3.1.bin
 
     echo -e "\n\n\n\n\n\nY\n\n\n\n\n" | script -qefc "./install_nanolabo_tool_linux_v3.1.bin"
