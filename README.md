@@ -108,4 +108,5 @@ definition.
 
 ## Links
 - https://docs.mat3ra.com/cli/actions/add-software/
+- https://docs.mat3ra.com/tutorials/contribute-new-application/
 - https://apptainer.org/docs/admin/latest/
